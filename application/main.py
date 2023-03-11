@@ -178,3 +178,55 @@ def handler_for_edit() -> None:
     data_saved(source)
     logging.info(f'Data saved to {source=}')
     wait_for_continue()
+    # Обработка удаления
+def handler_for_delete() -> None:
+    try:
+        source = DEFAULT_SRC
+        data_from_file = load_from_file(source)
+        
+    except Exception as err:
+        print(err)
+        logging.exception(err)
+        return -1
+    finally:
+        if data_from_file == -1:
+            return -1
+        wait_for_continue()
+
+    print_id_date(data_from_file)
+
+    try:
+        data_from_file['notes'][0]
+    except IndexError as err:
+        print(err)
+        logging.exception(err)
+        return -1
+    except KeyError as err:
+        print(err)
+        logging.exception(err)
+        return -1
+    selected_id = select_id_ui(data_from_file)
+    update_notes = note_deletion(selected_id, data_from_file)
+
+    write_to_file(update_notes, source)
+    data_deleted(source)
+    logging.info(f'Data saved to {source=}')
+    wait_for_continue()
+
+# Для модуля редактирования
+def edit_switcher(mode: int, data: dict, id_note: int) -> dict:
+    
+    match mode:
+        case 31:
+            new_title = edit_title_note_ui()
+            return update_note(mode, new_title, data, id_note)
+        case 32:
+            new_data = edit_data_note_ui()
+            return update_note(mode, new_data, data, id_note)
+        case _:
+            logging.info('Ошибка! Непонятно что редактировать.')
+
+# Предложение продолжить работу
+def wait_for_continue() -> None:
+    if input('Чтобы продолжить нажми любую клавишу: '):
+        return
