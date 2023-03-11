@@ -33,3 +33,62 @@ def main_handler(operation_code: int) -> None:
     elif str(operation_code)[0] in ('5'):
         handler_for_delete()
 
+# Обработка режима чтения
+def handler_for_read(operation_code: int) -> None:
+    
+    match operation_code:
+        case 11:
+            data_from_file = load_from_file(DEFAULT_SRC)
+            
+            try:
+                if data_from_file == -1:
+                    return -1
+                data_from_file['notes'][0]
+            except IndexError as err:
+                print(err)
+                logging.exception(err)
+                return -1
+            except KeyError as err:
+                print(err)
+                logging.exception(err)
+                return -1
+
+            print_all(data_from_file)
+            wait_for_continue()
+        case 12:
+            data_from_file = load_from_file(DEFAULT_SRC)
+            
+            try:
+                if data_from_file == -1:
+                    return -1
+                data_from_file['notes'][0]
+            except IndexError as err:
+                print(err)
+                logging.exception(err)
+                return -1
+            except KeyError as err:
+                print('No valid file.')
+                logging.exception(err)
+                return -1
+
+            print_filter_date(data_from_file)
+            wait_for_continue()
+        case 13:
+            data_from_file = load_from_file(DEFAULT_SRC)
+            
+            try:
+                if data_from_file == -1:
+                    return -1
+                data_from_file['notes'][0]
+            except IndexError as err:
+                print(err)
+                logging.exception(err)
+                return -1
+            except KeyError as err:
+                print(err)
+                logging.exception(err)
+                return -1
+            print('Доступные id.')
+            print_id_date(data_from_file)
+            print_id_selection(data_from_file, select_id_ui(data_from_file))
+            wait_for_continue()
