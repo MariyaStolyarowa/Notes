@@ -138,3 +138,43 @@ def handler_for_save() -> None:
         logging.info(f'Data saved to {source=}')
     finally:
         wait_for_continue()
+        
+# Обработка редактирования
+def handler_for_edit() -> None:
+    
+    try:
+        source = DEFAULT_SRC
+        data_from_file = load_from_file(source)
+    except Exception as err:
+        print(err)
+        logging.exception(err)
+        return -1
+    finally:
+        if data_from_file == -1:
+            return -1
+        wait_for_continue()
+
+    try:
+        data_from_file['notes'][0]
+    except IndexError as err:
+        print(err)
+        logging.exception(err)
+        return -1
+    except KeyError as err:
+        print(err)
+        logging.exception(err)
+        return -1
+    
+    print_id_date(data_from_file)
+    selected_id = select_id_ui(data_from_file)
+    print_id_selection(data_from_file, selected_id)
+    wait_for_continue()
+
+    option = ask_about_data_edit()
+    edited_note = edit_switcher(option, data_from_file, selected_id)
+
+    write_to_file(edited_note, source)
+    print_id_selection(edited_note, selected_id)
+    data_saved(source)
+    logging.info(f'Data saved to {source=}')
+    wait_for_continue()
