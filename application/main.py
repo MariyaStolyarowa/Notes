@@ -92,3 +92,49 @@ def handler_for_read(operation_code: int) -> None:
             print_id_date(data_from_file)
             print_id_selection(data_from_file, select_id_ui(data_from_file))
             wait_for_continue()
+# Обработка режима добавления
+def handler_for_add() -> None:
+    source = DEFAULT_SRC
+    data_from_file = load_from_file(source)
+    
+    try:
+        if data_from_file == -1:
+            return -1
+        note_id = data_from_file['notes'][-1]['id'] + 1
+    except Exception as err:
+        print(err)
+        logging.exception(err)
+        return -1
+    finally:
+        wait_for_continue()
+    note_title = ask_for_title()
+    note_data = ask_about_data()
+    date = datetime.today().strftime('%d-%m-%Y')
+    upd_data = fill_new_note(data_from_file, note_id, note_title, note_data, date)
+    write_to_file(upd_data, source)
+    note_added_ui()
+    wait_for_continue()
+
+# Обработка сохранения
+def handler_for_save() -> None:
+    try:
+        source = DEFAULT_SRC
+        data_from_file = load_from_file(source)
+        
+    except Exception as err:
+        print(err)
+        logging.exception(err)
+        return -1
+    finally:
+        if data_from_file == -1:
+            return -1
+        wait_for_continue()
+
+        source = DEFAULT_SRC
+    
+    try:
+        write_to_file(data_from_file, source)
+        data_saved(source)
+        logging.info(f'Data saved to {source=}')
+    finally:
+        wait_for_continue()
