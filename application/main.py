@@ -164,7 +164,7 @@ def handler_for_edit() -> None:
         print(err)
         logging.exception(err)
         return -1
-
+    
     print_id_date(data_from_file)
     selected_id = select_id_ui(data_from_file)
     print_id_selection(data_from_file, selected_id)
