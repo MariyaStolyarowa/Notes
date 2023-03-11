@@ -1,6 +1,4 @@
-"""Not console application. 
-\nThis module is an entrance point of the app."""
-
+# It works
 from application import entrance_point
 
 if __name__ == '__main__':
